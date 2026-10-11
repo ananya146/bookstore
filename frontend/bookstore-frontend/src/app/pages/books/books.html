@@ -1,0 +1,122 @@
+
+<div class="books-page">
+
+  <header class="page-header">
+    <div class="header-top">
+      <div>
+        <h1>BookStore</h1>
+        <p>Browse our collection of books</p>
+      </div>
+
+      <nav class="navigation">
+        <a routerLink="/books">Home / Books</a>
+        <a routerLink="/cart">Cart</a>
+        <a routerLink="/checkout">Checkout</a>
+        <a routerLink="/orders">My Orders</a>
+        <button type="button" (click)="logout()">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Category Filter -->
+  <div class="category-filter">
+    <button type="button" (click)="showAllBooks()">
+      All Books
+    </button>
+
+    @for (category of categories; track category.id) {
+      <button
+        type="button"
+        (click)="selectCategory(category.id)"
+      >
+        {{ category.name }}
+      </button>
+    }
+  </div>
+
+  <!-- Brand Filter -->
+  <div class="brand-filter">
+    <span class="filter-label">Brands:</span>
+
+    @for (brand of brands; track brand.id) {
+      <button
+        type="button"
+        (click)="selectBrand(brand.id)"
+      >
+        {{ brand.name }}
+      </button>
+    }
+  </div>
+
+  @if (cartMessage) {
+    <p class="success">{{ cartMessage }}</p>
+  }
+
+  @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  }
+
+  <!-- Main Book Catalogue -->
+  <div class="books-grid">
+    @for (book of books; track book.id) {
+      <div class="book-card">
+        <img [src]="book.imageUrl" [alt]="book.title" />
+
+        <div class="book-details">
+          <h2>
+            <a [routerLink]="['/books', book.id]">
+              {{ book.title }}
+            </a>
+          </h2>
+
+          <p class="author">{{ book.author }}</p>
+          <p class="category">
+            {{ book.category.name }} · {{ book.brand.name }}
+          </p>
+          <p class="price">₹{{ book.price }}</p>
+          <p class="stock">{{ book.stock }} available</p>
+
+          <button type="button" (click)="addToCart(book.id)">
+            Add to Cart
+            @if (cartQuantities[book.id]) {
+              ({{ cartQuantities[book.id] }})
+            }
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Recommended Books -->
+  @if (recommendations.length > 0) {
+    <section class="recommendations-section">
+      <div class="recommendations-header">
+        <h2>Recommended For You</h2>
+        <p>Based on your previous purchases</p>
+      </div>
+
+      <div class="books-grid">
+        @for (book of recommendations; track book.id) {
+          <div class="book-card">
+            <img [src]="book.imageUrl" [alt]="book.title" />
+
+            <div class="book-details">
+              <h2>{{ book.title }}</h2>
+              <p class="author">{{ book.author }}</p>
+              <p class="price">₹{{ book.price }}</p>
+              <p class="stock">{{ book.stock }} available</p>
+
+              <button type="button" (click)="addToCart(book.id)">
+                Add to Cart
+                @if (cartQuantities[book.id]) {
+                  ({{ cartQuantities[book.id] }})
+                }
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+</div>

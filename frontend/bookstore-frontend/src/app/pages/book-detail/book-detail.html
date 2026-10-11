@@ -1,0 +1,151 @@
+<div class="book-detail-page">
+
+  <header class="page-header">
+
+    <div>
+      <h1>BookStore</h1>
+      <p>Book Details</p>
+    </div>
+
+    <nav class="navigation">
+      <a routerLink="/books">Books</a>
+      <a routerLink="/cart">Cart</a>
+      <a routerLink="/checkout">Checkout</a>
+    </nav>
+
+  </header>
+
+  @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  }
+
+  @if (cartMessage) {
+    <p class="success">{{ cartMessage }}</p>
+  }
+
+  @if (book) {
+
+    <div class="book-detail-card">
+
+      <div class="book-image">
+
+        <img
+          [src]="book.imageUrl"
+          [alt]="book.title"
+        />
+
+      </div>
+
+      <div class="book-info">
+
+        <h1>{{ book.title }}</h1>
+
+        <p class="author">
+          {{ book.author }}
+        </p>
+
+        <p class="category">
+          {{ book.category.name }} · {{ book.brand.name }}
+        </p>
+
+        <p class="price">
+          ₹{{ book.price }}
+        </p>
+
+        <p class="stock">
+          {{ book.stock }} available
+        </p>
+
+        <p>
+          <strong>Category:</strong>
+          {{ book.category.name }}
+        </p>
+
+        <p>
+          <strong>Brand:</strong>
+          {{ book.brand.name }}
+        </p>
+
+        <p>
+          <strong>Tentative Delivery:</strong>
+          {{ tentativeDeliveryDate }}
+        </p>
+
+        <button
+          type="button"
+          (click)="addToCart()"
+        >
+          Add to Cart
+        </button>
+
+        <button
+          type="button"
+          routerLink="/cart"
+        >
+          Go to Cart
+        </button>
+
+      </div>
+
+    </div>
+
+    @if (relatedBooks.length > 0) {
+
+      <section class="related-products">
+
+        <div class="related-header">
+          <h2>Related Products</h2>
+          <p>More books from the same category</p>
+        </div>
+
+        <div class="related-books-grid">
+
+          @for (relatedBook of relatedBooks; track relatedBook.id) {
+
+            <div class="related-book-card">
+
+              <img
+                [src]="relatedBook.imageUrl"
+                [alt]="relatedBook.title"
+              />
+
+              <div class="related-book-info">
+
+                <h3>
+                  <a
+                    [routerLink]="['/books', relatedBook.id]"
+                  >
+                    {{ relatedBook.title }}
+                  </a>
+                </h3>
+
+                <p>
+                  {{ relatedBook.author }}
+                </p>
+
+                <p class="price">
+                  ₹{{ relatedBook.price }}
+                </p>
+
+                <button
+                  type="button"
+                  [routerLink]="['/books', relatedBook.id]"
+                >
+                  View Details
+                </button>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+    }
+
+  }
+
+</div>

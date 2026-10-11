@@ -1,0 +1,400 @@
+
+<div class="checkout-page">
+  <div class="checkout-container">
+
+    <header class="checkout-header">
+      <a routerLink="/cart" class="back-link">← Back to Cart</a>
+
+      <p class="eyebrow">ALMOST THERE</p>
+      <h1>Checkout</h1>
+      <p class="header-subtitle">
+        Confirm your delivery details and payment method.
+      </p>
+
+      <nav class="checkout-navigation" aria-label="Shopping navigation">
+        <a routerLink="/books">Books</a>
+        <a routerLink="/cart">Cart</a>
+        <span class="active-link">Checkout</span>
+      </nav>
+    </header>
+
+    @if (errorMessage) {
+      <div class="checkout-error" role="alert">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="checkout-success" role="status">
+        {{ successMessage }}
+      </div>
+    }
+
+    <div class="checkout-layout">
+
+      <main class="checkout-main">
+
+        <!-- Delivery address -->
+        <section class="checkout-section">
+          <div class="section-title">
+            <span class="step-number">1</span>
+            <div>
+              <h2>Delivery address</h2>
+              <p>Where should we deliver your books?</p>
+            </div>
+          </div>
+
+          @if (addresses.length > 0) {
+            <div class="address-list">
+              @for (address of addresses; track address.id) {
+                <div
+                  class="address-option"
+                  [class.selected-address]="selectedAddress?.id === address.id"
+                >
+                  <input
+                    type="radio"
+                    name="deliveryAddress"
+                    [checked]="selectedAddress?.id === address.id"
+                    (change)="selectAddress(address)"
+                    [attr.aria-label]="'Deliver to ' + address.fullName"
+                  />
+
+                  <span class="address-radio" aria-hidden="true"></span>
+
+                  <span class="address-content">
+                    <strong>{{ address.fullName }}</strong>
+                    <span>{{ address.addressLine }}</span>
+                    <span>
+                      {{ address.city }}, {{ address.state }} -
+                      {{ address.postalCode }}
+                    </span>
+                    <span class="address-phone">
+                      Phone: {{ address.phone }}
+                    </span>
+                  </span>
+
+                  @if (selectedAddress?.id === address.id) {
+                    <span class="selected-label">Selected</span>
+                  }
+
+                  <button
+                    type="button"
+                    class="delete-address-button"
+                    (click)="deleteAddress(address)"
+                    [disabled]="deletingAddressId === address.id"
+                    [attr.aria-label]="'Delete address for ' + address.fullName"
+                  >
+                    {{ deletingAddressId === address.id ? 'Deleting...' : 'Delete' }}
+                  </button>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="no-address">
+              <strong>No saved delivery address</strong>
+              <p>Add a delivery address to continue with your order.</p>
+            </div>
+          }
+
+          <button
+            type="button"
+            class="address-action-button"
+            (click)="showAddressForm = !showAddressForm"
+          >
+            {{ showAddressForm ? 'Cancel' : '+ Add New Address' }}
+          </button>
+
+          @if (showAddressForm) {
+            <form
+              class="address-form"
+              #addressForm="ngForm"
+              (ngSubmit)="saveAddress()"
+            >
+              <h3>New delivery address</h3>
+
+              <div class="address-form-field">
+                <label for="fullName">Full name</label>
+                <input
+                  id="fullName"
+                  name="fullName"
+                  type="text"
+                  [(ngModel)]="newAddress.fullName"
+                  autocomplete="name"
+                  required
+                />
+              </div>
+
+              <div class="address-form-field">
+                <label for="phone">Phone number</label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  [(ngModel)]="newAddress.phone"
+                  autocomplete="tel"
+                  inputmode="numeric"
+                  pattern="[0-9]{10}"
+                  maxlength="10"
+                  placeholder="10-digit mobile number"
+                  required
+                />
+              </div>
+
+              <div class="address-form-field">
+                <label for="addressLine">Address</label>
+                <textarea
+                  id="addressLine"
+                  name="addressLine"
+                  [(ngModel)]="newAddress.addressLine"
+                  autocomplete="street-address"
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="address-form-field">
+                <label for="city">City</label>
+                <input
+                  id="city"
+                  name="city"
+                  type="text"
+                  [(ngModel)]="newAddress.city"
+                  autocomplete="address-level2"
+                  required
+                />
+              </div>
+
+              <div class="address-form-field">
+                <label for="state">State</label>
+                <input
+                  id="state"
+                  name="state"
+                  type="text"
+                  [(ngModel)]="newAddress.state"
+                  autocomplete="address-level1"
+                  required
+                />
+              </div>
+
+              <div class="address-form-field">
+                <label for="postalCode">Postal code</label>
+                <input
+                  id="postalCode"
+                  name="postalCode"
+                  type="text"
+                  [(ngModel)]="newAddress.postalCode"
+                  inputmode="numeric"
+                  pattern="[0-9]{6}"
+                  maxlength="6"
+                  autocomplete="postal-code"
+                  placeholder="6-digit PIN code"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="address-save-button"
+                [disabled]="savingAddress || addressForm.invalid"
+              >
+                {{ savingAddress ? 'Saving Address...' : 'Save Address' }}
+              </button>
+            </form>
+          }
+        </section>
+
+        <!-- Payment method -->
+        <section class="checkout-section">
+          <div class="section-title">
+            <span class="step-number">2</span>
+            <div>
+              <h2>Payment method</h2>
+              <p>Choose how you would like to pay.</p>
+            </div>
+          </div>
+
+          <div class="payment-options">
+            <label
+              class="payment-option"
+              [class.selected-payment]="selectedPaymentMethod === 'UPI'"
+            >
+              <input
+                type="radio"
+                name="payment"
+                value="UPI"
+                [(ngModel)]="selectedPaymentMethod"
+              />
+              <span class="payment-icon">₹</span>
+              <span class="payment-text">
+                <strong>UPI</strong>
+                <span>Pay using your UPI app</span>
+              </span>
+              <span class="payment-radio"></span>
+            </label>
+
+            <label
+              class="payment-option"
+              [class.selected-payment]="selectedPaymentMethod === 'CARD'"
+            >
+              <input
+                type="radio"
+                name="payment"
+                value="CARD"
+                [(ngModel)]="selectedPaymentMethod"
+              />
+              <span class="payment-icon">▤</span>
+              <span class="payment-text">
+                <strong>Credit / Debit Card</strong>
+                <span>Pay using your bank card</span>
+              </span>
+              <span class="payment-radio"></span>
+            </label>
+
+            <label
+              class="payment-option"
+              [class.selected-payment]="selectedPaymentMethod === 'COD'"
+            >
+              <input
+                type="radio"
+                name="payment"
+                value="COD"
+                [(ngModel)]="selectedPaymentMethod"
+              />
+              <span class="payment-icon">⌂</span>
+              <span class="payment-text">
+                <strong>Cash on Delivery</strong>
+                <span>Pay when your order arrives</span>
+              </span>
+              <span class="payment-radio"></span>
+            </label>
+          </div>
+        </section>
+
+        <!-- Gift points -->
+        <section class="checkout-section gift-points-section">
+          <div class="section-title">
+            <span class="step-number gift-step">3</span>
+            <div>
+              <h2>Gift points</h2>
+              <p>Use your rewards on this purchase.</p>
+            </div>
+          </div>
+
+          <div class="gift-points-balance">
+            <span>Available balance: </span>
+            <strong>{{ giftPointsAvailable }} points</strong>
+          </div>
+
+          <label class="gift-points-option">
+            <input
+              type="checkbox"
+              name="giftPoints"
+              [(ngModel)]="useGiftPoints"
+              [disabled]="giftPointsAvailable <= 0 || totalPrice <= 0"
+            />
+            <span class="gift-checkbox"></span>
+            <span>
+              <strong>Redeem gift points</strong>
+              <span>1 point = ₹1 discount</span>
+            </span>
+          </label>
+
+          @if (giftPointsAvailable <= 0) {
+            <p class="gift-points-message">
+              You don't have any gift points available yet.
+            </p>
+          } @else if (useGiftPoints) {
+            <div class="gift-points-breakdown">
+              <div>
+                <span>Points to redeem: </span>
+                <strong>{{ giftPointsToRedeem }}</strong>
+              </div>
+              <div>
+                <span>Discount applied: </span>
+                <strong>₹{{ giftPointsToRedeem }}</strong>
+              </div>
+              @if (giftPointsAvailable > giftPointsToRedeem) {
+                <p class="gift-points-message">
+                  {{ giftPointsAvailable - giftPointsToRedeem }}
+                  points will remain in your account after this order.
+                </p>
+              }
+            </div>
+          } @else {
+            <p class="gift-points-message">
+              You can redeem up to
+              {{ giftPointsToRedeemForDisplay }} points on this order.
+            </p>
+          }
+        </section>
+
+      </main>
+
+      <!-- Order summary -->
+      <aside class="order-summary">
+        <h2>Order summary</h2>
+        <p class="summary-subtitle">A quick review of your purchase</p>
+
+        <div class="summary-items">
+          @for (item of cartItems; track item.id) {
+            <div class="summary-book">
+              <div class="summary-book-info">
+                <strong>{{ item.book.title }}</strong>
+                <span>Qty: {{ item.quantity }}</span>
+              </div>
+              <span class="summary-book-price">
+                ₹{{ item.book.price * item.quantity }}
+              </span>
+            </div>
+          }
+        </div>
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <strong>₹{{ totalPrice }}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Delivery</span>
+          <strong class="free-delivery">FREE</strong>
+        </div>
+
+        @if (useGiftPoints && giftPointsToRedeem > 0) {
+          <div class="summary-row gift-discount-row">
+            <span>Gift points discount</span>
+            <strong>−₹{{ giftPointsToRedeem }}</strong>
+          </div>
+        }
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-total">
+          <span>Payable amount</span>
+          <strong>₹{{ payableAmount }}</strong>
+        </div>
+
+        <button
+          type="button"
+          class="place-order-button"
+          (click)="placeOrder()"
+          [disabled]="
+            !selectedAddress ||
+            cartItems.length === 0 ||
+            showAddressForm ||
+            savingAddress ||
+            deletingAddressId !== null
+          "
+        >
+          Place Order <span aria-hidden="true">→</span>
+        </button>
+
+        <p class="summary-note">
+          Please verify your delivery address before placing your order.
+        </p>
+
+        <a routerLink="/cart" class="edit-cart-link">← Review cart</a>
+      </aside>
+
+    </div>
+  </div>
+</div>

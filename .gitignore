@@ -1,0 +1,23 @@
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Backend build output
+backend/target/
+
+# Local environment and secret configuration
+.env
+.env.*
+!.env.example
+**/application-local.properties
+**/application-local.yml
+
+# Logs and temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.vscode/
+.idea/

@@ -1,0 +1,47 @@
+<div class="confirmation-page">
+
+  <div class="confirmation-card">
+
+    <div class="success-icon">
+      ✓
+    </div>
+
+    <h1>Order Placed Successfully!</h1>
+
+    <p class="thank-you">
+      Thank you for your purchase.
+    </p>
+
+    <div class="confirmation-details">
+
+      <div class="detail-row">
+        <span>Order ID</span>
+        <strong>#{{ orderId }}</strong>
+      </div>
+
+      <div class="detail-row">
+        <span>Order Total</span>
+        <strong>₹{{ totalAmount }}</strong>
+      </div>
+
+      <div class="detail-row">
+        <span>Expected Delivery</span>
+        <strong>{{ deliveryDate }}</strong>
+      </div>
+
+    </div>
+
+    <div class="confirmation-actions">
+
+      <button
+        type="button"
+        (click)="continueShopping()"
+        >
+        Continue Shopping
+    </button>
+
+    </div>
+
+  </div>
+
+</div>

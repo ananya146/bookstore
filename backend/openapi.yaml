@@ -1,0 +1,475 @@
+openapi: 3.0.3
+
+info:
+  title: Bookstore API
+  description: Backend API for the Bookstore e-commerce application
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+
+  # ---------------- AUTHENTICATION ----------------
+
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Invalid registration details
+
+  /api/auth/login:
+    post:
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid email or password
+
+  # ---------------- CATEGORIES ----------------
+
+  /api/categories:
+    get:
+      summary: Get all book categories
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+
+  # ---------------- BRANDS ----------------
+
+  /api/brands:
+    get:
+      summary: Get all book brands
+      responses:
+        '200':
+          description: List of brands
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Brand'
+
+  # ---------------- BOOKS ----------------
+
+  /api/books:
+    get:
+      summary: Get all books
+      responses:
+        '200':
+          description: List of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+
+  /api/books/{id}:
+    get:
+      summary: Get book details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Book details
+        '404':
+          description: Book not found
+
+  /api/books/category/{categoryId}:
+    get:
+      summary: Get books by category
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Books in the selected category
+
+  /api/books/brand/{brandId}:
+    get:
+      summary: Get books by brand
+      parameters:
+        - name: brandId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Books from the selected brand
+
+  # ---------------- CART ----------------
+
+  /api/cart/user/{userId}:
+    get:
+      summary: Get user's cart
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User cart
+
+  /api/cart/items:
+    post:
+      summary: Add a book to cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartItemRequest'
+      responses:
+        '200':
+          description: Book added to cart
+
+  /api/cart/items/{id}:
+    put:
+      summary: Update cart item quantity
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuantityRequest'
+      responses:
+        '200':
+          description: Cart item updated
+
+    delete:
+      summary: Remove item from cart
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Item removed
+
+  # ---------------- ADDRESSES ----------------
+
+  /api/addresses/user/{userId}:
+    get:
+      summary: Get user's addresses
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User addresses
+
+    post:
+      summary: Add delivery address
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressRequest'
+      responses:
+        '201':
+          description: Address created
+
+  # ---------------- ORDERS ----------------
+
+  /api/orders:
+    post:
+      summary: Create an order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Order created successfully
+
+  /api/orders/user/{userId}:
+    get:
+      summary: Get user's order history
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Order history
+
+  /api/orders/{orderId}/cancel:
+    post:
+      summary: Cancel an order within 48 hours
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Order cancelled
+        '400':
+          description: Cancellation window expired
+
+  /api/orders/{orderId}/buy-again:
+    post:
+      summary: Buy the books from a previous order again
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Items added to cart
+
+  # ---------------- RECOMMENDATIONS ----------------
+
+  /api/recommendations/user/{userId}:
+    get:
+      summary: Get book recommendations for a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Recommended books
+
+  # ---------------- PAYMENT ----------------
+
+  /api/payments:
+    post:
+      summary: Process payment for an order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: Payment successful
+        '400':
+          description: Payment failed
+
+components:
+
+  schemas:
+
+    RegisterRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+
+    Brand:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        author:
+          type: string
+        price:
+          type: number
+          format: double
+        stock:
+          type: integer
+        imageUrl:
+          type: string
+        description:
+          type: string
+        categoryId:
+          type: integer
+          format: int64
+        brandId:
+          type: integer
+          format: int64
+
+    CartItemRequest:
+      type: object
+      required:
+        - userId
+        - bookId
+        - quantity
+      properties:
+        userId:
+          type: integer
+          format: int64
+        bookId:
+          type: integer
+          format: int64
+        quantity:
+          type: integer
+
+    QuantityRequest:
+      type: object
+      required:
+        - quantity
+      properties:
+        quantity:
+          type: integer
+
+    AddressRequest:
+      type: object
+      required:
+        - fullName
+        - addressLine
+        - city
+        - state
+        - postalCode
+        - phone
+      properties:
+        fullName:
+          type: string
+        addressLine:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        phone:
+          type: string
+
+    CreateOrderRequest:
+      type: object
+      required:
+        - userId
+        - addressId
+        - paymentMethod
+      properties:
+        userId:
+          type: integer
+          format: int64
+        addressId:
+          type: integer
+          format: int64
+        paymentMethod:
+          type: string
+        giftPointsUsed:
+          type: integer
+
+    PaymentRequest:
+      type: object
+      required:
+        - orderId
+        - paymentMethod
+      properties:
+        orderId:
+          type: integer
+          format: int64
+        paymentMethod:
+          type: string

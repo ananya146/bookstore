@@ -1,0 +1,84 @@
+<div class="orders-page">
+
+  <header class="orders-header">
+    <h1>My Orders</h1>
+    <p>View your previous purchases</p>
+
+    <a routerLink="/books">Home / Books</a>
+  </header>
+
+  @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  }
+
+  @if (orders.length === 0 && !errorMessage) {
+    <div class="empty-orders">
+      <h2>No orders yet</h2>
+      <p>Your previous orders will appear here.</p>
+    </div>
+  }
+
+  @if (orders.length > 0) {
+
+    <div class="orders-list">
+
+      @for (order of orders; track order.id) {
+
+        <div class="order-card">
+
+          <div class="order-header">
+            <h2>Order #{{ order.id }}</h2>
+
+            <span class="status">
+              {{ order.status }}
+            </span>
+          </div>
+
+          <div class="order-details">
+
+            <p>
+              <strong>Order Date:</strong>
+              {{ order.orderDate | date:'dd MMMM yyyy' }}
+            </p>
+
+            <p>
+              <strong>Total:</strong>
+              ₹{{ order.totalAmount }}
+            </p>
+
+            <p>
+              <strong>Expected Delivery:</strong>
+              {{ order.tentativeDeliveryDate | date:'dd MMMM yyyy' }}
+            </p>
+
+          </div>
+
+          <div class="order-actions">
+
+            @if (canCancel(order)) {
+              <button
+                type="button"
+                (click)="cancelOrder(order)"
+              >
+                Cancel Order
+              </button>
+            }
+
+            <button
+              type="button"
+              (click)="buyAgain(order)"
+            >
+              Buy It Again
+            </button>
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</div>

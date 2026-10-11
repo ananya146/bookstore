@@ -1,0 +1,56 @@
+<div class="register-container">
+
+  <div class="register-card">
+
+    <h1>BookStore</h1>
+    <h2>Create Account</h2>
+
+    <form (ngSubmit)="register()">
+
+      <label for="name">Name</label>
+      <input
+        id="name"
+        type="text"
+        name="name"
+        [(ngModel)]="name"
+        placeholder="Enter your name"
+        required
+      />
+
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        placeholder="Enter your email"
+        required
+      />
+
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        placeholder="Create a password"
+        required
+      />
+
+      <button type="submit">
+        Register
+      </button>
+
+      @if (successMessage) {
+        <p class="success">{{ successMessage }}</p>
+      }
+
+      @if (errorMessage) {
+        <p class="error">{{ errorMessage }}</p>
+      }
+
+    </form>
+
+  </div>
+
+</div>

@@ -1,0 +1,79 @@
+<div class="payment-confirmation-page">
+
+  <header class="page-header">
+
+    <div>
+      <h1>BookStore</h1>
+      <p>Payment Confirmation</p>
+    </div>
+
+    <nav class="navigation">
+      <a routerLink="/books">Books</a>
+      <a routerLink="/cart">Cart</a>
+      <a routerLink="/orders">My Orders</a>
+    </nav>
+
+  </header>
+
+  @if (errorMessage) {
+
+    <div class="error">
+      <p>{{ errorMessage }}</p>
+      <a routerLink="/checkout">
+        Return to Checkout
+      </a>
+    </div>
+
+  }
+
+  @if (order) {
+
+    <div class="payment-card">
+
+      <h2>Confirm Your Payment</h2>
+
+      <p>
+        Please review your payment details before confirming.
+      </p>
+
+      <div class="payment-details">
+
+        <p>
+          <strong>Order Number:</strong>
+          #{{ order.id }}
+        </p>
+
+        <p>
+          <strong>Payment Method:</strong>
+          {{ paymentMethod }}
+        </p>
+
+        <p>
+          <strong>Amount:</strong>
+          ₹{{ order.totalAmount }}
+        </p>
+
+        <p>
+          <strong>Expected Delivery:</strong>
+          {{ order.tentativeDeliveryDate }}
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        (click)="confirmPayment()"
+        [disabled]="processingPayment"
+      >
+      @if (processingPayment) {
+        Processing Payment...
+      } @else {
+        Confirm Payment
+      }
+      </button>
+
+    </div>
+
+  }
+
+</div>

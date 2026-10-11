@@ -1,0 +1,156 @@
+
+<div class="cart-page">
+  <div class="cart-container">
+
+    <header class="cart-header">
+      <a routerLink="/books" class="back-link">← Continue shopping</a>
+
+      <div class="header-content">
+        <div>
+          <p class="eyebrow">YOUR SELECTION</p>
+          <h1>Shopping Cart</h1>
+          <p class="header-subtitle">
+            Review your books before placing your order.
+          </p>
+        </div>
+
+        @if (cartItems.length > 0) {
+          <span class="item-count">
+            {{ cartItems.length }}
+            {{ cartItems.length === 1 ? 'item' : 'items' }}
+          </span>
+        }
+      </div>
+    </header>
+
+    @if (errorMessage) {
+      <div class="error-message" role="alert">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (cartItems.length === 0 && !errorMessage) {
+      <section class="empty-cart">
+        <div class="empty-cart-icon" aria-hidden="true">📚</div>
+        <h2>Your cart is waiting for a good book</h2>
+        <p>You haven't added any books yet. Explore the collection and find your next read.</p>
+        <a routerLink="/books" class="primary-button">
+          Browse Books
+        </a>
+      </section>
+    }
+
+    @if (cartItems.length > 0) {
+      <div class="cart-layout">
+
+        <section class="cart-items-section" aria-label="Books in your cart">
+          <div class="section-heading">
+            <h2>Your books</h2>
+            <span>Adjust quantities or remove a book</span>
+          </div>
+
+          @for (item of cartItems; track item.id) {
+            <article class="cart-item">
+              <div class="book-cover">
+                <img
+                  [src]="item.book.imageUrl"
+                  [alt]="item.book.title"
+                />
+              </div>
+
+              <div class="cart-item-details">
+                <h3>{{ item.book.title }}</h3>
+                <p class="author">by {{ item.book.author }}</p>
+
+                <p class="unit-price">
+                  ₹{{ item.book.price }} <span>per book</span>
+                </p>
+
+                <div class="item-actions">
+                  <div class="quantity-control" aria-label="Book quantity">
+                    <button
+                      type="button"
+                      class="quantity-button"
+                      (click)="decreaseQuantity(item)"
+                      [disabled]="item.quantity <= 1"
+                      [attr.aria-label]="'Decrease quantity of ' + item.book.title"
+                    >
+                      −
+                    </button>
+
+                    <span class="quantity" aria-live="polite">
+                      {{ item.quantity }}
+                    </span>
+
+                    <button
+                      type="button"
+                      class="quantity-button"
+                      (click)="increaseQuantity(item)"
+                      [attr.aria-label]="'Increase quantity of ' + item.book.title"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="remove-button"
+                    (click)="removeFromCart(item)"
+                    [attr.aria-label]="'Remove ' + item.book.title + ' from cart'"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+
+              <div class="item-subtotal">
+                <span>Subtotal</span>
+                <strong>₹{{ item.book.price * item.quantity }}</strong>
+              </div>
+            </article>
+          }
+        </section>
+
+        <aside class="order-summary">
+          <h2>Order summary</h2>
+
+          <div class="summary-row">
+            <span>Books</span>
+            <span>{{ cartItems.length }} {{ cartItems.length === 1 ? 'item' : 'items' }}</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>₹{{ getTotalPrice() }}</span>
+          </div>
+
+          <div class="summary-row delivery-row">
+            <span>Delivery</span>
+            <span>Calculated at checkout</span>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-total">
+            <span>Estimated total</span>
+            <strong>₹{{ getTotalPrice() }}</strong>
+          </div>
+
+          <a routerLink="/checkout" class="checkout-button">
+            Proceed to Checkout <span aria-hidden="true">→</span>
+          </a>
+
+          <p class="secure-note">
+            Review your delivery details at checkout.
+          </p>
+
+          <a routerLink="/books" class="summary-back-link">
+            ← Continue browsing
+          </a>
+        </aside>
+
+      </div>
+    }
+
+  </div>
+</div>
