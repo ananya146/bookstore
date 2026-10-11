@@ -73,60 +73,6 @@ Bookstore
 
 PostgreSQL stores persistent application data, including records for users, books, and orders, according to the implemented data model.
 
-## ⚙️ Getting Started
-
-### Prerequisites
-
-Install the following before running the application:
-
-- Node.js and npm
-- Angular CLI
-- Java Development Kit (JDK)
-- Maven
-- PostgreSQL
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/bookstore.git
-cd bookstore
-```
-
-### 2. Configure the Database
-
-Create a PostgreSQL database for the application.
-
-```sql
-CREATE DATABASE bookstore_db;
-```
-
-Configure the backend database connection using your local PostgreSQL credentials. Keep passwords and other secrets in local configuration or environment variables; do not commit them to GitHub.
-
-### 3. Run the Backend
-
-Open a terminal in the backend directory:
-
-```bash
-cd backend
-mvn spring-boot:run
-```
-
-The Spring Boot application typically runs on `http://localhost:8080`, unless configured otherwise.
-
-### 4. Run the Frontend
-
-Open another terminal in the frontend directory:
-
-```bash
-cd frontend
-npm install
-ng serve
-```
-
-Open `http://localhost:4200` in your browser.
-
-> **Note:** The commands above assume the frontend directory is named `frontend`. Adjust the path and database configuration to match the actual project structure. Any additional application-specific configuration or database initialization must also be completed before running the application.
-
 ## 🔄 Application Workflow
 
 1. Register a new account or log in.
@@ -149,4 +95,3 @@ Open `http://localhost:4200` in your browser.
 
 ---
 
-*This project is intended for learning and demonstration purposes. Features such as payment processing, authentication security, and deployment depend on their actual implementation and configuration.*
