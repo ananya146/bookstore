@@ -1,4 +1,4 @@
-<img width="932" height="485" alt="image" src="https://github.com/user-attachments/assets/d403f732-d56f-47cc-a05d-76ba6a28f7f7" /># Bookstore — Full-Stack E-Commerce Application
+# Bookstore — Full-Stack E-Commerce Application
 
 A full-stack bookstore web application that allows users to browse books, explore recommendations, manage their shopping cart, place orders, and track their purchase history.
 
