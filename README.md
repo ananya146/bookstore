@@ -1,4 +1,4 @@
-# Bookstore — Full-Stack E-Commerce Application
+<img width="932" height="485" alt="image" src="https://github.com/user-attachments/assets/d403f732-d56f-47cc-a05d-76ba6a28f7f7" /># Bookstore — Full-Stack E-Commerce Application
 
 A full-stack bookstore web application that allows users to browse books, explore recommendations, manage their shopping cart, place orders, and track their purchase history.
 
@@ -17,8 +17,8 @@ Built using **Angular, Spring Boot, and PostgreSQL**, the project demonstrates f
 - **Order Cancellation:** Cancel eligible orders.
 - **Buy Again:** Add previously purchased books back to the cart.
 
-  
-![Uploading image.png…]()
+<img width="1865" height="971" alt="Screenshot 2026-10-11 213456" src="https://github.com/user-attachments/assets/f960db64-4664-4498-bf7c-b28c44753f6e" />
+
 
 ## 🛠️ Tech Stack
 
